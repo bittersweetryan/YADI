@@ -11,7 +11,8 @@
       //loop through images
       $this.find('li>img').each(function(){
         var $span = $('<span></span>'),
-            $this = $(this);
+            $this = $(this),
+            $newImg = $this.clone();
         
        // $this.data("originalSize",$this.size());
         
@@ -22,15 +23,20 @@
         $this.height(100);
 
         $this.click(function(){
-          $("#main").html('<img src="' + $this.attr("src") + '">');
+
+          if($newImg.height() >= height){
+            $newImg.height(height);  
+          }
+          
+          $("#iz_main").find("img").remove().end().append($newImg);
         });
         
         $span.append($this);
 
-        $pictureFrame.find("#thumbs").append($span);
+        $pictureFrame.find("#iz_thumbs").append($span);
       });
 
-      $pictureFrame.find("#close > a").click(function(){
+      $pictureFrame.find("#iz_close > a").click(function(){
 
           $pictureFrame.animate({width:0,height:0},function(){
             $pictureFrame.hide();
@@ -51,6 +57,7 @@
           $link.click(function(){
             $overlay.fadeIn('slow',function(){
               $pictureFrame.height(10);
+              $pictureFrame.find("#iz_main > img").remove();
               $pictureFrame.show();
               $pictureFrame.animate({width: width, height: height});
             });
@@ -63,11 +70,11 @@
   };
 
   function getOverlay(){
-    return $('<div class="overlay" id="overlay">&nbsp;</div>');
+    return $('<div class="zoom_overlay" id="iz_overlay">&nbsp;</div>');
   }
 
   function getPictureFrame(){
-    var $pictureFrame = $('<div class="pictureFrame" id="pictureFrame" style="width:0; height:0"><div class="close" id="close"><a href="#">close</a></div><div class="thumbs" id="thumbs"></div><div class="main" id="main"></div></div>'),
+    var $pictureFrame = $('<div class="zoom_pictureFrame" id="iz_pictureFrame" style="width:0; height:0"><div class="zoom_close" id="iz_close"><a href="#">close</a></div><div class="zoom_thumbs" id="iz_thumbs"></div><div class="zoom_main" id="iz_main"></div></div>'),
         height = $(window).height(),
         width = $(document).width();
 
