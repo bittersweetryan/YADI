@@ -6,6 +6,10 @@
           width = 600,
           height = 400;
 
+      if($this.find('li>img').length === 0){
+        return this;
+      }
+
       $this.remove();
 
       //loop through images
@@ -52,12 +56,13 @@
       base.append(getLink());
 
         function getLink(){
-          var $link = $('<div><a href="#">Zoom</a></div>');
+          var $link = $('<div><a href="#">Detailed Images</a></div>');
 
           $link.click(function(){
             $overlay.fadeIn('slow',function(){
               $pictureFrame.height(10);
               $pictureFrame.find("#iz_main > img").remove();
+              $pictureFrame.find("#iz_thumbs > span").find("img").get(0).click();
               $pictureFrame.show();
               $pictureFrame.animate({width: width, height: height});
             });
@@ -87,3 +92,4 @@
   }
 
 })(jQuery);
+  
