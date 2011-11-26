@@ -1,13 +1,13 @@
  .zoom_pictureFrame{
-    width: 700px; 
+    width: 750px; 
     background-color: #ffffff;
-    height: 500px;
+    height: 600px;
     border: 6px solid black;
     position: fixed;
     z-index:9999;
-    moz-border-radius: 5px;
+   /* moz-border-radius: 5px;
     webkit-border-radius: 5px;
-    border-radius: 5px;
+    border-radius: 5px;*/
     -moz-box-shadow: 6px 6px 5px #888;
     -webkit-box-shadow: 6px 6px 5px #888;
     box-shadow: 6px 6px 5px #888;
@@ -26,8 +26,9 @@
     filter:alpha(opacity=60);
     margin-left: auto;
     margin-right: auto;
-    position: absolute;
-    z-index:1;
+    position: relative;         
+    /*z-index:1;*/
+    float:left;
   }
   
   .zoom_main{
@@ -41,6 +42,7 @@
     padding:0;
     opacity: .6;
     filter:alpha(opacity=60);
+    filter:progid:DXImageTransform.Microsoft.Alpha(opacity=60);
     z-index: 9998;
     position: fixed;
     top: 0;
@@ -48,10 +50,10 @@
     padding: 0;
     margin: 0;
     background-color:#999999;
-    background-image: url(steel.jpg);
+    /*background-image: url(steel.jpg);*/
   }
   
-  .zoom_main img{position:absolute;top:0;bottom:0;right:0;left:0;margin:auto;}
+  .zoom_main img{position:absolute;bottom:0;right:0;left:0;margin:auto;}
   
   .zoom_close{
     position: absolute;

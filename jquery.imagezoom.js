@@ -1,10 +1,19 @@
 (function( $ ){
-  $.fn.imagezoom = function(base){
+  $.fn.imagezoom = function(base, options){
       var $this = $(this),
-          $pictureFrame = getPictureFrame(),
-          $overlay = getOverlay(),
-          width = 600,
-          height = 400;
+          
+          defaultOptions = {
+            width : 700,
+            height : 500
+          };
+      
+      var options = options || {};
+
+      $.extend(options, defaultOptions);
+      
+      var $pictureFrame = getPictureFrame(options),
+          $overlay = getOverlay();
+      
 
       if($this.find('li>img').length === 0){
         return this;
@@ -16,9 +25,7 @@
       $this.find('li>img').each(function(){
         var $span = $('<span></span>'),
             $this = $(this),
-            $newImg = $this.clone();
-        
-       // $this.data("originalSize",$this.size());
+            $newImg = $this.clone().height(options.height - 100);
         
         $this.mouseover(function(){
           $this.css("cursor","pointer");
@@ -27,10 +34,6 @@
         $this.height(100);
 
         $this.click(function(){
-
-          if($newImg.height() >= height){
-            $newImg.height(height);  
-          }
           
           $("#iz_main").find("img").remove().end().append($newImg);
         });
@@ -55,16 +58,16 @@
         
       base.append(getLink());
 
-        function getLink(){
+      function getLink(){
           var $link = $('<div><a href="#">Detailed Images</a></div>');
 
           $link.click(function(){
             $overlay.fadeIn('slow',function(){
               $pictureFrame.height(10);
               $pictureFrame.find("#iz_main > img").remove();
-              $pictureFrame.find("#iz_thumbs > span").find("img").get(0).click();
+              $pictureFrame.find("#iz_thumbs > span").find("img").eq(0).click();
               $pictureFrame.show();
-              $pictureFrame.animate({width: width, height: height});
+              $pictureFrame.animate({width: options.width, height: options.height});
             });
           });
 
@@ -78,14 +81,14 @@
     return $('<div class="zoom_overlay" id="iz_overlay">&nbsp;</div>');
   }
 
-  function getPictureFrame(){
-    var $pictureFrame = $('<div class="zoom_pictureFrame" id="iz_pictureFrame" style="width:0; height:0"><div class="zoom_close" id="iz_close"><a href="#">close</a></div><div class="zoom_thumbs" id="iz_thumbs"></div><div class="zoom_main" id="iz_main"></div></div>'),
+  function getPictureFrame(options){
+    var $pictureFrame = $('<div class="zoom_pictureFrame" id="iz_pictureFrame" style="width:0; height:0"><div class="zoom_thumbs" id="iz_thumbs"></div> <div class="zoom_close" id="iz_close"><a href="#">close</a></div><div class="zoom_main" id="iz_main"></div></div>'),
         height = $(window).height(),
         width = $(document).width();
 
     $pictureFrame.css({
-        'left' : width/2 - 350, 
-        'top' : height/2 - 250  
+        'left' : width/2 - (options.width/2), 
+        'top' : height/2 - (options.height/2)  
     });
 
     return $pictureFrame;
