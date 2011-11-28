@@ -4,15 +4,19 @@
           
           defaultOptions = {
             width : 700,
-            height : 500
+            height : 500,
+            previewHeight: 50,
+            previewDivWidth: 200
           };
       
       var options = options || {};
 
       $.extend(options, defaultOptions);
       
+      //create some new DOM elements
       var $pictureFrame = getPictureFrame(options),
-          $overlay = getOverlay();
+          $overlay = getOverlay(),
+          $preview = getPreview(options);
       
 
       if($this.find('li>img').length === 0){
@@ -25,7 +29,8 @@
       $this.find('li>img').each(function(){
         var $span = $('<span></span>'),
             $this = $(this),
-            $newImg = $this.clone().height(options.height - 100);
+            $newImg = $this.clone().height(options.height - 100),
+            $previewImg = $this.clone().height(options.previewHeight);
         
         $this.mouseover(function(){
           $this.css("cursor","pointer");
@@ -39,6 +44,7 @@
         });
         
         $span.append($this);
+        $preview.append($previewImg);
 
         $pictureFrame.find("#iz_thumbs").append($span);
       });
@@ -55,8 +61,9 @@
       $overlay.hide();
 
       $("body").append($pictureFrame).append($overlay);
-        
-      base.append(getLink());
+      
+      $preview.append(getLink());  
+      base.append($preview);
 
       function getLink(){
           var $link = $('<div><a href="#">Detailed Images</a></div>');
@@ -79,6 +86,10 @@
 
   function getOverlay(){
     return $('<div class="zoom_overlay" id="iz_overlay">&nbsp;</div>');
+  }
+
+  function getPreview(argument){
+    return $('<div class="zoom_preview"></div>');
   }
 
   function getPictureFrame(options){

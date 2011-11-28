@@ -67,3 +67,11 @@
   .zoom_close a{
     color: #6E6E6E;
   }
+
+  .zoom_preview{
+    display:block;
+    width:auto;
+    position:absolute;
+    float:left;
+    text-align:center;
+  }
