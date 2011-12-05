@@ -43,6 +43,13 @@
           $("#iz_main").find("img").remove().end().append($newImg);
         });
         
+        $previewImg.click(function(){
+            show($overlay,$pictureFrame,options); 
+          })
+        .hover(function(){
+          $(this).css({"cursor" : "pointer"});
+        });
+
         $span.append($this);
         $preview.append($previewImg);
 
@@ -69,13 +76,7 @@
           var $link = $('<div><a href="#">Detailed Images</a></div>');
 
           $link.click(function(){
-            $overlay.fadeIn('slow',function(){
-              $pictureFrame.height(10);
-              $pictureFrame.find("#iz_main > img").remove();
-              $pictureFrame.find("#iz_thumbs > span").find("img").eq(0).click();
-              $pictureFrame.show();
-              $pictureFrame.animate({width: options.width, height: options.height});
-            });
+            show($overlay,$pictureFrame,options); 
           });
 
           return $link;
@@ -83,6 +84,16 @@
 
       return $this;
   };
+
+  function show($overlay,$pictureFrame,options){
+     $overlay.fadeIn('slow',function(){
+              $pictureFrame.height(10);
+              $pictureFrame.find("#iz_main > img").remove();
+              $pictureFrame.find("#iz_thumbs > span").find("img").eq(0).click();
+              $pictureFrame.show();
+              $pictureFrame.animate({width: options.width, height: options.height});
+            });
+  }
 
   function getOverlay(){
     return $('<div class="zoom_overlay" id="iz_overlay">&nbsp;</div>');
