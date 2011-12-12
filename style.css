@@ -20,15 +20,15 @@
   }
   
   .zoom_thumbs{
-    width: 100%;
     height: 120px;
     opacity: .6;
     filter:alpha(opacity=60);
     margin-left: auto;
     margin-right: auto;
     position: relative;         
-    /*z-index:1;*/
     float:left;
+    overflow: hidden;
+
   }
   
   .zoom_main{
@@ -70,8 +70,15 @@
 
   .zoom_preview{
     display:block;
-    width:auto;
+    width:200px;
     position:absolute;
     float:left;
     text-align:center;
+    overflow: hidden;
+  }
+
+  #staging{
+    left:-9999px;
+    bottom:0px;
+    position:fixed;
   }

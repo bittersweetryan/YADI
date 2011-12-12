@@ -1,13 +1,15 @@
 (function( $ ){
   $.fn.imagezoom = function(base, options){
       var $this = $(this),
-          
           defaultOptions = {
             width : 700,
             height : 500,
             previewHeight: 50,
-            previewDivWidth: 200
-          };
+            previewDivWidth: 200,
+            thumbsWidth: 0
+          },
+          currentPos = 0,
+          $stageDiv = createDiv();
       
       var options = options || {};
 
@@ -17,7 +19,6 @@
       var $pictureFrame = getPictureFrame(options),
           $overlay = getOverlay(),
           $preview = getPreview(options);
-      
 
       if($this.find('li>img').length === 0){
         return this;
@@ -29,10 +30,10 @@
       $this.find('li>img').each(function(){
         var $span = $('<span></span>'),
             $this = $(this),
-            $newImg = $this.clone().height(options.height - 100),
+            $newImg = $this.clone().height(options.height - 100), 
             $previewImg = $this.clone().height(options.previewHeight);
         
-        $this.mouseover(function(){
+          $this.mouseover(function(){
           $this.css("cursor","pointer");
         });
 
@@ -45,13 +46,21 @@
         
         $previewImg.click(function(){
             show($overlay,$pictureFrame,options); 
-          })
-        .hover(function(){
-          $(this).css({"cursor" : "pointer"});
-        });
+          }).
+          hover(function(){
+            $(this).css({"cursor" : "pointer"});
+          });
 
         $span.append($this);
+        
         $preview.append($previewImg);
+        var $stagingImage = $this.clone();
+
+        $stagingImage.load(function(){
+          options.thumbsWidth += $(this).get(0).clientWidth;
+        })
+
+        $stageDiv.append($stagingImage);
 
         $pictureFrame.find("#iz_thumbs").append($span);
       });
@@ -67,8 +76,8 @@
       $pictureFrame.hide();
       $overlay.hide();
 
-      $("body").append($pictureFrame).append($overlay);
-      
+      $("body").append($pictureFrame).append($overlay).append($stageDiv);
+
       $preview.append(getLink());  
       base.append($preview);
 
@@ -81,17 +90,23 @@
 
           return $link;
         }
-
+        
       return $this;
   };
 
   function show($overlay,$pictureFrame,options){
      $overlay.fadeIn('slow',function(){
-              $pictureFrame.height(10);
+              $pictureFrame.height(0);
+              
               $pictureFrame.find("#iz_main > img").remove();
               $pictureFrame.find("#iz_thumbs > span").find("img").eq(0).click();
+              $pictureFrame.find("#iz_thumbs").width(options.thumbsWidth);
+              
               $pictureFrame.show();
-              $pictureFrame.animate({width: options.width, height: options.height});
+
+              $pictureFrame.animate({width: options.width},function(){
+                $pictureFrame.animate({height: options.height});
+              });
             });
   }
 
@@ -114,6 +129,10 @@
     });
 
     return $pictureFrame;
+  }
+
+  function createDiv(){
+    return  $('<div id="staging"></div>');
   }
 
 })(jQuery);
