@@ -1,138 +1,166 @@
-(function( $ ){
+(function( $, undefined ){
   $.fn.imagezoom = function(base, options){
-      var $this = $(this),
-          defaultOptions = {
-            width : 700,
-            height : 500,
-            previewHeight: 50,
-            previewDivWidth: 200,
-            thumbsWidth: 0
-          },
-          currentPos = 0,
-          $stageDiv = createDiv();
-      
-      var options = options || {};
+	var $this = $(this),
+		defaultOptions = {
+			width : 700,
+			height : 500,
+			previewHeight: 50,
+			previewDivWidth: 200,
+			thumbsWidth: 0
+		},
+		currentPos = 0,
+		$stageDiv = createDiv(),
+		overArrow = false;
+		
+		options = options || {};
 
-      $.extend(options, defaultOptions);
-      
-      //create some new DOM elements
-      var $pictureFrame = getPictureFrame(options),
-          $overlay = getOverlay(),
-          $preview = getPreview(options);
+		$.extend(options, defaultOptions);
 
-      if($this.find('li>img').length === 0){
-        return this;
-      }
+		//create some new DOM elements
+		var $pictureFrame = getPictureFrame(options),
+		$overlay = getOverlay(),
+		$preview = getPreview(options);
 
-      $this.remove();
+		if($this.find('li>img').length === 0){
+			return this;
+		}
 
-      //loop through images
-      $this.find('li>img').each(function(){
-        var $span = $('<span></span>'),
-            $this = $(this),
-            $newImg = $this.clone().height(options.height - 100), 
-            $previewImg = $this.clone().height(options.previewHeight);
-        
-          $this.mouseover(function(){
-          $this.css("cursor","pointer");
-        });
+		$this.remove();
 
-        $this.height(100);
+		//loop through images
+		$this.find('li>img').each(function(){
+		var $span = $('<span></span>'),
+			$this = $(this),
+			$newImg = $this.clone().height(options.height - 100),
+			$previewImg = $this.clone().height(options.previewHeight);
+		
+		$this.mouseover(function(){
+		$this.css("cursor","pointer");
+		});
 
-        $this.click(function(){
-          
-          $("#iz_main").find("img").remove().end().append($newImg);
-        });
-        
-        $previewImg.click(function(){
-            show($overlay,$pictureFrame,options); 
-          }).
-          hover(function(){
-            $(this).css({"cursor" : "pointer"});
-          });
+		$this.height(100);
 
-        $span.append($this);
-        
-        $preview.append($previewImg);
-        var $stagingImage = $this.clone();
+		$this.click(function(){
 
-        $stagingImage.load(function(){
-          options.thumbsWidth += $(this).get(0).clientWidth;
-        })
+		$("#iz_main").find("img").remove().end().append($newImg);
+		});
+		
+		$previewImg.click(function(){
+			show($overlay,$pictureFrame,options);
+		}).
+		hover(function(){
+			$(this).css({"cursor" : "pointer"});
+		});
 
-        $stageDiv.append($stagingImage);
+		$span.append($this);
+		
+		$preview.append($previewImg);
+		var $stagingImage = $this.clone();
 
-        $pictureFrame.find("#iz_thumbs").append($span);
-      });
+		$stagingImage.load(function(){
+			options.thumbsWidth += $(this).get(0).clientWidth;
+		});
 
-      $pictureFrame.find("#iz_close > a").click(function(){
+		$stageDiv.append($stagingImage);
 
-          $pictureFrame.animate({width:0,height:0},function(){
-            $pictureFrame.hide();
-            $overlay.fadeOut();
-          });
-      });
-       
-      $pictureFrame.hide();
-      $overlay.hide();
+		$pictureFrame.find("#iz_thumbs").append($span);
+		}); //end loop through images
 
-      $("body").append($pictureFrame).append($overlay).append($stageDiv);
+		//add the arrows
+		$rightArrow = createArrow('right');
+		$leftArrow = createArrow('left');
 
-      $preview.append(getLink());  
-      base.append($preview);
+		$pictureFrame.append($rightArrow).append($leftArrow);
 
-      function getLink(){
-          var $link = $('<div><a href="#">Detailed Images</a></div>');
+		var $arrows = $pictureFrame.find(".arrow");
 
-          $link.click(function(){
-            show($overlay,$pictureFrame,options); 
-          });
+		//add the close link
+		$pictureFrame.find("#iz_close > a").click(function(){
 
-          return $link;
-        }
-        
-      return $this;
-  };
+		$pictureFrame.animate({height:0},function(){
+			$(this).animate({width:0},function(){
+				$pictureFrame.hide();
+				$overlay.fadeOut();
+			});
+		});
+	});
 
-  function show($overlay,$pictureFrame,options){
-     $overlay.fadeIn('slow',function(){
-              $pictureFrame.height(0);
-              
-              $pictureFrame.find("#iz_main > img").remove();
-              $pictureFrame.find("#iz_thumbs > span").find("img").eq(0).click();
-              $pictureFrame.find("#iz_thumbs").width(options.thumbsWidth);
-              
-              $pictureFrame.show();
+		//hide the objects
+		$pictureFrame.hide();
+		$overlay.hide();
 
-              $pictureFrame.animate({width: options.width},function(){
-                $pictureFrame.animate({height: options.height});
-              });
-            });
-  }
+		$("body").append($pictureFrame).append($overlay).append($stageDiv);
 
-  function getOverlay(){
-    return $('<div class="zoom_overlay" id="iz_overlay">&nbsp;</div>');
-  }
+		$preview.append(getLink());
+		base.append($preview);
+	
+	function scroll(){
+		var $this = $(this);
 
-  function getPreview(argument){
-    return $('<div class="zoom_preview"></div>');
-  }
+		if($this.is("right_arrow")){
+			$thumbs.animate("");
+		}
+	}
 
-  function getPictureFrame(options){
-    var $pictureFrame = $('<div class="zoom_pictureFrame" id="iz_pictureFrame" style="width:0; height:0"><div class="zoom_thumbs" id="iz_thumbs"></div> <div class="zoom_close" id="iz_close"><a href="#">close</a></div><div class="zoom_main" id="iz_main"></div></div>'),
-        height = $(window).height(),
-        width = $(document).width();
+	function getLink(){
+		var $link = $('<div><a href="#">Detailed Images</a></div>');
 
-    $pictureFrame.css({
-        'left' : width/2 - (options.width/2), 
-        'top' : height/2 - (options.height/2)  
-    });
+		$link.click(function(){
+			show($overlay,$pictureFrame,options);
+		});
 
-    return $pictureFrame;
+		return $link;
+	}
+		
+	return $this;
+ };
+
+ function createArrow(direction){
+	return $('<div class="arrow ' + direction + '_arrow">&nbsp;</div>');
+}
+
+
+function show($overlay,$pictureFrame,options){
+	$overlay.fadeIn('slow',function(){
+		$pictureFrame.height(0);
+
+		$pictureFrame.find("#iz_main > img").remove();
+		$pictureFrame.find("#iz_thumbs > span").find("img").eq(0).click();
+		$pictureFrame.find("#iz_thumbs").width(options.thumbsWidth);
+
+		$pictureFrame.show();
+
+		$pictureFrame.animate({width: options.width},function(){
+			$pictureFrame.animate({height: options.height},function(){
+					$pictureFrame.find("#iz_thumbs").slideDown('slow');
+			});
+		});
+	});
+ }
+
+function getOverlay(){
+	return $('<div class="zoom_overlay" id="iz_overlay">&nbsp;</div>');
+}
+
+function getPreview(argument){
+	return $('<div class="zoom_preview"></div>');
+}
+
+function getPictureFrame(options){
+	var $pictureFrame = $('<div class="zoom_pictureFrame" id="iz_pictureFrame" style="width:0; height:0"><div class="zoom_thumbs" id="iz_thumbs"></div> <div class="zoom_close" id="iz_close"><a href="#">close</a></div><div class="zoom_main" id="iz_main"></div></div>'),
+		height = $(window).height(),
+		width = $(document).width();
+
+	$pictureFrame.css({
+		'left' : width/2 - (options.width/2),
+		'top' : height/2 - (options.height/2)
+	});
+
+	return $pictureFrame;
   }
 
   function createDiv(){
-    return  $('<div id="staging"></div>');
+	return	$('<div id="staging"></div>');
   }
 
 })(jQuery);

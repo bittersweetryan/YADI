@@ -1,7 +1,7 @@
  .zoom_pictureFrame{
     width: 750px; 
     background-color: #ffffff;
-    height: 600px;
+    height: 620px;
     border: 6px solid black;
     position: fixed;
     z-index:9999;
@@ -17,18 +17,19 @@
     margin-left: auto;
     margin-right: auto; 
     overflow: hidden; 
+    padding:0px;
   }
   
   .zoom_thumbs{
     height: 120px;
     opacity: .6;
     filter:alpha(opacity=60);
-    margin-left: auto;
-    margin-right: auto;
     position: relative;         
     float:left;
     overflow: hidden;
-
+    padding:0px;
+    margin:0px;
+    text-align:center;
   }
   
   .zoom_main{
@@ -76,6 +77,26 @@
     text-align:center;
     overflow: hidden;
   }
+
+  .arrow{
+    position:absolute;
+    display:block;
+    top:35px;
+    height:40px;
+    bottom:auto;
+    width:25px;
+  }
+
+  .right_arrow{ 
+    right:0px;
+    background-image:url(images/rightArrow_sm.png);
+  }
+
+  .left_arrow{
+    left:0px;
+    background-image:url(images/leftArrow_sm.png);
+  }
+
 
   #staging{
     left:-9999px;

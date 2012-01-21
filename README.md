@@ -3,6 +3,10 @@
 
 This is a simple plugin that meets a clients needs for a detailed image plugin.  
 
+##Usage
+
+To use this plugin.
+
 ##License
 This application is licensed under the MIT License
 
