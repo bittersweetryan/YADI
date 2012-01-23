@@ -5,12 +5,12 @@
     border: 6px solid black;
     position: fixed;
     z-index:9999;
-   /* moz-border-radius: 5px;
-    webkit-border-radius: 5px;
-    border-radius: 5px;*/
-    -moz-box-shadow: 6px 6px 5px #888;
-    -webkit-box-shadow: 6px 6px 5px #888;
-    box-shadow: 6px 6px 5px #888;
+    moz-border-radius: 2px;
+    webkit-border-radius: 2px;
+    border-radius: 2px;
+    -moz-box-shadow: 15px 15px 10px #888;
+    -webkit-box-shadow: 15px 15px 10px #888;
+    box-shadow: 15px 15px 10px #888;
     padding: 10px;
     display:inline-block;
     text-align:center;
@@ -18,22 +18,25 @@
     margin-right: auto; 
     overflow: hidden; 
     padding:0px;
+    margin:0px;
   }
   
   .zoom_thumbs{
     height: 120px;
-    opacity: .6;
-    filter:alpha(opacity=60);
+ /*   opacity: .6;
+    filter:alpha(opacity=60); */
     position: relative;         
     float:left;
     overflow: hidden;
     padding:0px;
     margin:0px;
     text-align:center;
+    vertical-align: middle;
   }
   
   .zoom_main{
     text-align: center; 
+    margin:0px;
   } 
   
   .zoom_overlay{
@@ -58,13 +61,21 @@
   
   .zoom_close{
     position: absolute;
-    top: 10px;
-    right: 10px;
+    top: 0px;
+    right: 0px;
     display: block;
     width:auto;
     z-index: 2;
   }
+
+  .zoom_close img{
+    width: 20px;
+  }
   
+  .zoom_close img :hover{
+    cursor: pointer;
+  }
+
   .zoom_close a{
     color: #6E6E6E;
   }
@@ -81,22 +92,37 @@
   .arrow{
     position:absolute;
     display:block;
-    top:35px;
-    height:40px;
-    bottom:auto;
+    top:20px;
+    height:50px;
     width:25px;
+    background-color: #CCCCCC;
+    opacity: .8 !important;
+    filter:alpha(opacity=80);
+    padding: 5px;
+    background-repeat:no-repeat;
+  }
+
+  .arrow:hover{
+    cursor: pointer;
   }
 
   .right_arrow{ 
     right:0px;
     background-image:url(images/rightArrow_sm.png);
+    background-position: right center;
+    moz-border-radius: 4px 0px 0px 4px;
+    webkit-border-radius: 4px 0px 0px 4px;
+    border-radius: 4px 0px 0px 4px;
   }
 
   .left_arrow{
     left:0px;
     background-image:url(images/leftArrow_sm.png);
+    background-position: left center;
+    moz-border-radius: 0px 4px 4px 0px;
+    webkit-border-radius: 0px 4px 4px 0px;
+    border-radius: 0px 4px 4px 0px;
   }
-
 
   #staging{
     left:-9999px;
