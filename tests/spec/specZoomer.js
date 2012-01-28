@@ -49,6 +49,14 @@ describe("ImageZoomer", function() {
 		expect($(".zoom_pictureFrame")).toHaveArrows();
 	});
 
+	it("should add a staging div to the document", function(){
+		expect($("#staging").size()).toBe(1);
+	});
+
+	it("should have the right amount of images in the staging div",function(){
+		expect($("#staging").children().size()).toBe(2);
+	});
+
 //helpers
 	function removeElements(){
 		$("#content,#staging,.zoom_pictureFrame").remove();

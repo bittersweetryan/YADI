@@ -60,10 +60,8 @@
   .zoom_main img{position:absolute;bottom:0;right:0;left:0;margin:auto;}
   
   .zoom_close{
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    display: block;
+    position: fixed;
+    display: inline-block;
     width:auto;
     z-index: 2;
   }

@@ -39,66 +39,13 @@
 		$this.remove();
 
 		//loop through images and process each one
-		$this.find('li>img').each(function(){
-
-			var $span = $('<span></span>'),
-				$thumb = $(this),
-				$newImg = $thumb.clone().height(options.height - 100),
-				$previewImg = $thumb.clone().height(options.previewHeight);
-
-			$thumb.mouseover(function(){
-				$thumb.css("cursor","pointer");
-			});
-
-			$thumb.height(100);
-
-			$thumb.click(function(){
-				$("#iz_main").find("img").remove().end().append($newImg);
-			});
-
-			$previewImg.click(function(){
-				show($overlay,$pictureFrame,options);
-			}).
-			hover(function(){
-				$(this).css({"cursor" : "pointer"});
-			});
-
-			$span.append($thumb);
-			
-			$preview.append($previewImg);
-
-			var $stagingImage = $thumb.clone();
-
-			$stagingImage.load(function(){
-				options.thumbsWidth += $(this).get(0).clientWidth;
-
-				//add the arrows
-				if(options.thumbsWidth > options.width && !arrowsLoaded){
-					$rightArrow = createArrow('right');
-					$leftArrow = createArrow('left');
-
-					$pictureFrame.append($rightArrow).append($leftArrow);
-
-					$pictureFrame.find(".arrow").on("mouseover", function(){
-						if($(this).hasClass("right_arrow")){
-							scroll($thumbs,'right');
-						}
-					});
-
-					arrowsLoaded = true;
-				}
-			});
-
-			$stageDiv.append($stagingImage);
-
-			$thumbs.append($span);
-
-		}); //end loop through images
+		$this.find('li>img').each(processImage);
 
 		$pictureFrame.prepend($thumbs);
-		
-		
 
+		var close_left = parseInt($pictureFrame.css("left"),10) + options.width;
+		var close_top = parseInt($pictureFrame.css("top"),10) - 10;
+	
 		//add the close link
 		$pictureFrame.find("#iz_close > a").click(function(){
 
@@ -108,7 +55,8 @@
 					$overlay.fadeOut();
 				});
 			});
-		});
+		}).end().find("#iz_close").css({"left": close_left , "top": close_top}).
+		hide();
 
 		//hide the objects
 		$pictureFrame.hide();
@@ -122,10 +70,85 @@
 	$("body").append($pictureFrame).append($overlay);
 
 	//inner functions, these use vars nested in the plugin
-	function scroll($target, direction){
-		var scrollAmount = 100;
+	function processImage(){
+		var $span = $('<span></span>'),
+			$thumb = $(this),
+			$newImg = $thumb.clone().height(options.height - 100),
+			$previewImg = $thumb.clone().height(options.previewHeight);
 
-		$target.animate({"right": scrollAmount});
+		$thumb.mouseover(function(){
+			$thumb.css("cursor","pointer");
+		});
+
+		$thumb.height(100);
+
+		$thumb.click(function(){
+			$("#iz_main").find("img").remove().end().append($newImg);
+		});
+
+		$previewImg.click(function(){
+			show($overlay,$pictureFrame,options);
+		}).
+		hover(function(){
+			$(this).css({"cursor" : "pointer"});
+		});
+
+		$span.append($thumb);
+		
+		$preview.append($previewImg);
+
+		var $stagingImage = $thumb.clone();
+
+		$stagingImage.load(function(){
+			options.thumbsWidth += $(this).get(0).clientWidth;
+
+			//add the arrows
+			if(options.thumbsWidth > options.width && !arrowsLoaded){
+				$rightArrow = createArrow('right');
+				$leftArrow = createArrow('left');
+
+				$pictureFrame.append($rightArrow).append($leftArrow);
+
+				$pictureFrame.find(".arrow").on("mouseover", function(){
+					if($(this).hasClass("right_arrow")){
+						scroll($thumbs,'right');
+					}
+					else{
+						scroll($thumbs,'left');
+					}
+				}).on("mouseout",function(){
+					scrollStop();
+				});
+
+				arrowsLoaded = true;
+			}
+		});
+
+		$stageDiv.append($stagingImage);
+
+		$thumbs.append($span);
+	}
+
+	function scroll($target, direction){
+		var scrollAmount = 0;
+		var currentPos = parseInt($target.css("right"),10);
+
+		if(isNaN(currentPos)){
+			scrollAmount = (direction === 'right') ? 100 : -100;
+		}
+		else{
+			scrollAmount = (direction === 'right') ? currentPos + 100 : currentPos - 100;
+		}
+
+		$target.stop().animate({"right": scrollAmount},{ "duration": 200, "easing": "linear" });
+
+		to = setTimeout(function(){
+			scroll($target,direction);
+		},200);
+	}
+
+	function scrollStop(){
+		clearTimeout(to);
 	}
 
 	function getLink(){
@@ -157,7 +180,9 @@ function show($overlay,$pictureFrame,options){
 
 		$pictureFrame.animate({width: options.width},function(){
 			$pictureFrame.animate({height: options.height},function(){
-					$pictureFrame.find("#iz_thumbs").slideDown('slow');
+					$pictureFrame.find("#iz_thumbs").slideDown('slow',function(){
+						$pictureFrame.find("#iz_close").show();
+					});
 			});
 		});
 	});
@@ -190,7 +215,7 @@ function getThumbs(){
 }
 
 function createDiv(){
-	return	$('<div id="staging"></div>');
+	return	$('<div id="staging"></div>').appendTo("body");
 }
 
 })(jQuery);
