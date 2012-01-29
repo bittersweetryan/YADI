@@ -109,15 +109,14 @@
 
 				$pictureFrame.append($rightArrow).append($leftArrow);
 
-				$pictureFrame.find(".arrow").on("mouseover", function(){
+
+				$pictureFrame.find(".arrow").bind("mouseover", function(){
 					if($(this).hasClass("right_arrow")){
-						scroll($thumbs,'right');
+						scrollRight($thumbs);
 					}
 					else{
-						scroll($thumbs,'left');
+						scrollLeft($thumbs);
 					}
-				}).on("mouseout",function(){
-					scrollStop();
 				});
 
 				arrowsLoaded = true;
@@ -129,9 +128,26 @@
 		$thumbs.append($span);
 	}
 
+	function scrollRight($target){
+
+		return scroll($target,'right');
+	}
+
+	function scrollLeft($target){
+		return scroll($target,'left');
+	}
+	
 	function scroll($target, direction){
 		var scrollAmount = 0;
 		var currentPos = parseInt($target.css("right"),10);
+
+		if(direction === 'left' && (isNaN(currentPos) || currentPos <= 0)){
+			console.log(currentPos);
+			return false;
+		}
+		else if(direction === 'right' && currentPos + options.width > options.thumbsWidth){
+			return false;
+		}
 
 		if(isNaN(currentPos)){
 			scrollAmount = (direction === 'right') ? 100 : -100;
@@ -142,14 +158,12 @@
 
 		$target.stop().animate({"right": scrollAmount},{ "duration": 200, "easing": "linear" });
 
-		to = setTimeout(function(){
+		var to = setTimeout(function(){
 			scroll($target,direction);
 		},200);
 	}
 
-	function scrollStop(){
-		clearTimeout(to);
-	}
+	
 
 	function getLink(){
 		var $link = $('<div><a href="#">Detailed Images</a></div>');
