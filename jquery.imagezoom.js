@@ -48,7 +48,7 @@
 	
 		//add the close link
 		$pictureFrame.find("#iz_close > a").click(function(){
-
+			$(this).parent().hide();
 			$pictureFrame.animate({height:0},function(){
 				$(this).animate({width:0},function(){
 					$pictureFrame.hide();

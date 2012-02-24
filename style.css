@@ -23,8 +23,6 @@
   
   .zoom_thumbs{
     height: 120px;
- /*   opacity: .6;
-    filter:alpha(opacity=60); */
     position: relative;         
     float:left;
     overflow: hidden;
@@ -32,6 +30,10 @@
     margin:0px;
     text-align:center;
     vertical-align: middle;
+    box-shadow: 0 0 4px rgba(0, 0, 0, 2);
+    -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 2);
+    -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 2);
+    z-index:100;
   }
   
   .zoom_main{
@@ -63,7 +65,7 @@
     position: fixed;
     display: inline-block;
     width:auto;
-    z-index: 2;
+    z-index: 200;
   }
 
   .zoom_close img{
