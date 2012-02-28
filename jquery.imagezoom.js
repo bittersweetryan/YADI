@@ -3,7 +3,7 @@
 	var $this = $(this),
 		defaults = {
 			width : 700,
-			height : 500,
+			height : 620,
 			previewHeight: 50,
 			previewDivWidth: 200,
 			thumbsWidth: 0,
@@ -141,11 +141,13 @@
 		var scrollAmount = 0;
 		var currentPos = parseInt($target.css("right"),10);
 
-		if(direction === 'left' && (isNaN(currentPos) || currentPos <= 0)){
-			console.log(currentPos);
+		if(direction === 'left' && (isNaN(currentPos) || currentPos === 0)){
+			$target.stop();
 			return false;
 		}
-		else if(direction === 'right' && currentPos + options.width > options.thumbsWidth){
+		else if(direction === 'right' && (currentPos + 100) + options.width > options.thumbsWidth){
+			console.log(options.width - currentPos);
+			$target.stop();
 			return false;
 		}
 
@@ -153,7 +155,12 @@
 			scrollAmount = (direction === 'right') ? 100 : -100;
 		}
 		else{
-			scrollAmount = (direction === 'right') ? currentPos + 100 : currentPos - 100;
+			if(direction === 'right'){
+				scrollAmount = currentPos + 100;
+			}
+			else{
+				scrollAmount = (currentPos >= 0 && currentPos < 100) ? 0 : currentPos - 100;
+			}
 		}
 
 		$target.stop().animate({"right": scrollAmount},{ "duration": 200, "easing": "linear" });
